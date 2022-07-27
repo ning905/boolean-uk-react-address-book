@@ -13,6 +13,36 @@
       "lastName": "Hopper",
       "street": "32 Deebug Road",
       "city": "London"
+    },
+    {
+      "firstName": "Ning",
+      "lastName": "Ma",
+      "street": "thissss",
+      "city": "thatsss",
+      "email": "email@email.com",
+      "linkedIn": "https://github.com/ning905/boolean-uk-react-address-book",
+      "twitter": "https://github.com/ning905/boolean-uk-react-address-book",
+      "id": 3
+    },
+    {
+      "firstName": "bang",
+      "lastName": "bang",
+      "street": "that",
+      "city": "this",
+      "email": "cat@email.com",
+      "linkedIn": "",
+      "twitter": "",
+      "id": 4
+    },
+    {
+      "firstName": "coffee",
+      "lastName": "bean",
+      "street": "firstsecond",
+      "city": "London",
+      "email": "cat@email.com",
+      "linkedIn": "",
+      "twitter": "",
+      "id": 5
     }
   ]
 }

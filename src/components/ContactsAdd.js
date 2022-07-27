@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { apiUrl } from "../App";
 
 function ContactsAdd(props) {
   // setContacts and contacts must be passed as props
   // to this component so new contacts can be added to the
   // state
+  const { setContacts, contacts } = props;
   const iniContactData = {
     firstName: "",
     lastName: "",
@@ -14,41 +15,64 @@ function ContactsAdd(props) {
     email: "",
     linkedIn: "",
     twitter: "",
+    id: contacts.length + 1,
   };
 
-  const { setContacts, contacts } = props;
-  const [contact, setContact] = useState(iniContactData);
+  const [thisContact, setThisContact] = useState(iniContactData);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log("location ", location.state);
+    if (location.state) {
+      const { contact } = location.state;
+      setThisContact(contact);
+    }
+  }, [location]);
 
   //TODO: Implement controlled form
   //send POST to json server on form submit
 
   function handleChange(event) {
     const { name, value } = event.target;
-    setContact({ ...contact, [name]: value });
+    setThisContact({ ...thisContact, [name]: value });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...contact,
-      }),
-    });
-
-    setContacts([...contacts, contact]);
-    setContact(iniContactData);
-
+    if (thisContact.id < contacts.length + 1) {
+      fetch(`${apiUrl}/${thisContact.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...thisContact,
+        }),
+      });
+      // .then((res) => res.json())
+      // .then((data) => {
+      //   console.log("PATCH", data);
+      // });
+    } else {
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...thisContact,
+        }),
+      });
+      setContacts([...contacts, thisContact]);
+      // console.log("Posted");
+    }
     navigate("/");
   }
 
   // console.log("contacts: ", contacts);
-  // console.log("this contact :", contact);
+  // console.log("this contact :", thisContact);
 
   return (
     <form className="form-stack contact-form" onSubmit={handleSubmit}>
@@ -59,7 +83,7 @@ function ContactsAdd(props) {
         id="firstName"
         name="firstName"
         type="text"
-        value={contact.firstName}
+        value={thisContact.firstName}
         onChange={handleChange}
         required
       />
@@ -69,7 +93,7 @@ function ContactsAdd(props) {
         id="lastName"
         name="lastName"
         type="text"
-        value={contact.lastName}
+        value={thisContact.lastName}
         onChange={handleChange}
         required
       />
@@ -79,7 +103,7 @@ function ContactsAdd(props) {
         id="street"
         name="street"
         type="text"
-        value={contact.street}
+        value={thisContact.street}
         onChange={handleChange}
         required
       />
@@ -89,7 +113,7 @@ function ContactsAdd(props) {
         id="city"
         name="city"
         type="text"
-        value={contact.city}
+        value={thisContact.city}
         onChange={handleChange}
         required
       />
@@ -99,7 +123,7 @@ function ContactsAdd(props) {
         id="email"
         name="email"
         type="email"
-        value={contact.email}
+        value={thisContact.email}
         onChange={handleChange}
         required
       />
@@ -109,7 +133,7 @@ function ContactsAdd(props) {
         id="linkedIn"
         name="linkedIn"
         type="url"
-        value={contact.linkedIn}
+        value={thisContact.linkedIn}
         onChange={handleChange}
       />
 
@@ -118,7 +142,7 @@ function ContactsAdd(props) {
         id="twitter"
         name="twitter"
         type="url"
-        value={contact.twitter}
+        value={thisContact.twitter}
         onChange={handleChange}
       />
 

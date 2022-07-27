@@ -11,7 +11,6 @@ export default function App() {
   const [contacts, setContacts] = useState([]);
 
   //TODO: Load all contacts on useEffect when component first renders
-
   useEffect(() => {
     fetch(apiUrl)
       .then((res) => res.json())
@@ -20,6 +19,8 @@ export default function App() {
         setContacts(data);
       });
   }, []);
+
+  // console.log("Contacts", contacts);
 
   return (
     <>
@@ -38,7 +39,12 @@ export default function App() {
       <main>
         <Routes>
           {/* TODO: Add routes here  */}
-          <Route path="/" element={<ContactsList contacts={contacts} />} />
+          <Route
+            path="/"
+            element={
+              <ContactsList contacts={contacts} setContacts={setContacts} />
+            }
+          />
           <Route
             path="/contacts/add"
             element={
@@ -46,6 +52,12 @@ export default function App() {
             }
           />
           <Route path="/contacts/:id" element={<ContactsView />} />
+          <Route
+            path="/contacts/edit/:id"
+            element={
+              <ContactsAdd contacts={contacts} setContacts={setContacts} />
+            }
+          />
         </Routes>
       </main>
     </>

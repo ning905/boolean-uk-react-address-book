@@ -9,11 +9,10 @@ function ContactsView() {
   //With useEffect, load the contact when params changes
   //and update contact state
   const { id } = useParams();
-  console.log("prams: ", useParams());
   console.log("id: ", id);
 
   useEffect(() => {
-    fetch(`${apiUrl}/11`)
+    fetch(`${apiUrl}/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setContact(data);
@@ -34,6 +33,9 @@ function ContactsView() {
       <p>
         {contact.street} {contact.city}
       </p>
+      <p>{contact.email}</p>
+      <p>{contact.linkedIn}</p>
+      <p>{contact.twitter}</p>
     </div>
   );
 }
