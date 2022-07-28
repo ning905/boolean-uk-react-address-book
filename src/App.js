@@ -46,6 +46,7 @@ export default function App() {
               <ContactsList contacts={contacts} setContacts={setContacts} />
             }
           />
+          {/* <Route path='/contacts/?type=personal' */}
           <Route
             path="/contacts/add"
             element={
