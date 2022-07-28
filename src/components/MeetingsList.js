@@ -13,12 +13,12 @@ export default function MeetingsList() {
   const [thisMeeting, setThisMeeting] = useState(iniMeeting);
   const [meetings, setMeetings] = useState([]);
 
-  console.log("userId: " + id);
+  //   console.log("userId: " + id);
   useEffect(() => {
     fetch(`${apiUrl}/meetings?userId=${id}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data", data);
+        // console.log("data", data);
         setMeetings(data);
       });
   }, []);

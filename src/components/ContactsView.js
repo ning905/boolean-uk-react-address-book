@@ -25,6 +25,8 @@ function ContactsView() {
   return (
     <div>
       <h2>
+        {contact.type === "work" && "👩🏻‍💻"}
+        {contact.type === "personal" && "👭🏻"}
         {contact.firstName} {contact.lastName}
       </h2>
       <p>

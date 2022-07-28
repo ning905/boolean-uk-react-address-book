@@ -22,7 +22,7 @@ function ContactsAdd(props) {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("location ", location.state);
+    // console.log("location ", location.state);
     if (location.state) {
       const { contact } = location.state;
       setThisContact(contact);
@@ -30,6 +30,8 @@ function ContactsAdd(props) {
   }, [location]);
 
   function handleChange(event) {
+    console.log(event.target.name);
+    console.log(event.target.value);
     const { name, value } = event.target;
     setThisContact({ ...thisContact, [name]: value });
   }
@@ -59,6 +61,30 @@ function ContactsAdd(props) {
   return (
     <form className="form-stack contact-form" onSubmit={handleSubmit}>
       <h2>Create Contact</h2>
+
+      <div className="contact-type">
+        <label htmlFor="work">👩🏻‍💻 Work</label>
+        <input
+          id="work"
+          name="type"
+          type="radio"
+          value="work"
+          checked={thisContact.type === "work"}
+          onChange={handleChange}
+          required
+        />
+
+        <label htmlFor="personal">👭🏻 Personal</label>
+        <input
+          id="personal"
+          name="type"
+          type="radio"
+          value="personal"
+          checked={thisContact.type === "personal"}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
       <label htmlFor="firstName">First Name</label>
       <input
