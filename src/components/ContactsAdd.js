@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { apiUrl } from "../App";
+import { apiUrl } from "../functions/apiFunctions";
+import { patchToApi, postToApi, sendToApi } from "../functions/apiFunctions";
+import { updateArr } from "../functions/arrayFunctions";
 
 function ContactsAdd(props) {
-  // setContacts and contacts must be passed as props
-  // to this component so new contacts can be added to the
-  // state
-  const { setContacts, contacts } = props;
+  const { setContacts, contacts, contactId, setContactId } = props;
   const iniContactData = {
     firstName: "",
     lastName: "",
@@ -15,7 +14,7 @@ function ContactsAdd(props) {
     email: "",
     linkedIn: "",
     twitter: "",
-    id: contacts.length + 1,
+    id: contactId,
   };
 
   const [thisContact, setThisContact] = useState(iniContactData);
@@ -30,43 +29,26 @@ function ContactsAdd(props) {
     }
   }, [location]);
 
-  //TODO: Implement controlled form
-  //send POST to json server on form submit
-
   function handleChange(event) {
     const { name, value } = event.target;
     setThisContact({ ...thisContact, [name]: value });
   }
 
+  // console.log(thisContact.id);
+  // console.log("contactId", contactId);
+  // console.log("thisContact.id < contactId", thisContact.id < contactId);
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (thisContact.id < contacts.length + 1) {
-      fetch(`${apiUrl}/${thisContact.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...thisContact,
-        }),
-      });
-      // .then((res) => res.json())
-      // .then((data) => {
-      //   console.log("PATCH", data);
-      // });
+    if (thisContact.id < contactId) {
+      patchToApi(`${apiUrl}/contacts`, thisContact);
+
+      setContacts(updateArr(contacts, thisContact));
     } else {
-      fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...thisContact,
-        }),
-      });
+      postToApi(`${apiUrl}/contacts`, thisContact);
+
       setContacts([...contacts, thisContact]);
-      // console.log("Posted");
+      setContactId(contactId + 1);
     }
     navigate("/");
   }

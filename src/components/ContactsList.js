@@ -1,21 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { apiUrl } from "../App";
+import { apiUrl } from "../functions/apiFunctions";
+import { deleteFromApi } from "../functions/apiFunctions";
+import { filterArr } from "../functions/arrayFunctions";
 
 function ContactsList(props) {
-  //"contacts" must be passed as prop to this component
   const { contacts, setContacts } = props;
 
   function handleClick(itemToDelete) {
-    fetch(`${apiUrl}/${itemToDelete.id}`, {
-      method: "DELETE",
-    });
+    deleteFromApi(`${apiUrl}/contacts`, itemToDelete);
 
-    const updated = contacts.filter(
-      (contact) => contact.id !== itemToDelete.id
-    );
-    // console.log("Updated: ", updated);
-    setContacts(updated);
+    setContacts(filterArr(contacts, itemToDelete));
   }
 
   return (
@@ -26,9 +21,11 @@ function ContactsList(props) {
       <ul className="contacts-list">
         {contacts.map((contact, index) => {
           const { firstName, lastName } = contact;
+
           {
             /* console.log("this contact is: ", contact); */
           }
+
           return (
             <li className="contact" key={index}>
               <p>

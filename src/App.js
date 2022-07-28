@@ -3,20 +3,23 @@ import { Link, Route, Routes } from "react-router-dom";
 import ContactsList from "./components/ContactsList";
 import ContactsAdd from "./components/ContactsAdd";
 import ContactsView from "./components/ContactsView";
+import MeetingsList from "./components/MeetingsList";
 import "./styles/styles.css";
-
-export const apiUrl = "http://localhost:4000/contacts";
+import { apiUrl } from "./functions/apiFunctions";
 
 export default function App() {
   const [contacts, setContacts] = useState([]);
+  const [contactId, setContactId] = useState();
+  // console.log("contactId", contactId);
 
-  //TODO: Load all contacts on useEffect when component first renders
   useEffect(() => {
-    fetch(apiUrl)
+    fetch(`${apiUrl}/contacts`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("data", data);
+        // console.log("data", data);
         setContacts(data);
+        // console.log(data[data.length - 1].id);
+        setContactId(data[data.length - 1].id + 1);
       });
   }, []);
 
@@ -27,7 +30,6 @@ export default function App() {
       <nav>
         <h2>Menu</h2>
         <ul>
-          {/* TODO: Make these links */}
           <li>
             <Link to="/">Contacts List</Link>
           </li>
@@ -38,7 +40,6 @@ export default function App() {
       </nav>
       <main>
         <Routes>
-          {/* TODO: Add routes here  */}
           <Route
             path="/"
             element={
@@ -48,16 +49,26 @@ export default function App() {
           <Route
             path="/contacts/add"
             element={
-              <ContactsAdd contacts={contacts} setContacts={setContacts} />
+              <ContactsAdd
+                contacts={contacts}
+                setContacts={setContacts}
+                contactId={contactId}
+                setContactId={setContactId}
+              />
             }
           />
           <Route path="/contacts/:id" element={<ContactsView />} />
           <Route
             path="/contacts/edit/:id"
             element={
-              <ContactsAdd contacts={contacts} setContacts={setContacts} />
+              <ContactsAdd
+                contacts={contacts}
+                setContacts={setContacts}
+                contactId={contactId}
+              />
             }
           />
+          <Route path="/contacts/:id/meetings" element={<MeetingsList />} />
         </Routes>
       </main>
     </>

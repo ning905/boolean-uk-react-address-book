@@ -43,6 +43,46 @@
       "linkedIn": "",
       "twitter": "",
       "id": 5
+    },
+    {
+      "firstName": "esw",
+      "lastName": "erf",
+      "street": "we",
+      "city": "ewf",
+      "email": "dsjkg@sekjg.com",
+      "linkedIn": "",
+      "twitter": "",
+      "id": 6
+    }
+  ],
+  "meetings": [
+    {
+      "userId": "6",
+      "date": "2333-02-23",
+      "time": "03:02",
+      "location": "32",
+      "id": 1
+    },
+    {
+      "userId": "6",
+      "date": "3223-03-31",
+      "time": "03:02",
+      "location": "131",
+      "id": 2
+    },
+    {
+      "userId": "6",
+      "date": "65564-03-05",
+      "time": "04:55",
+      "location": "45",
+      "id": 3
+    },
+    {
+      "userId": "4",
+      "date": "2121-02-21",
+      "time": "21:02",
+      "location": "21",
+      "id": 4
     }
   ]
 }

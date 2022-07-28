@@ -1,25 +1,22 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { apiUrl } from "../App";
+import { Link, useParams } from "react-router-dom";
+import { apiUrl } from "../functions/apiFunctions";
 
 function ContactsView() {
   const [contact, setContact] = useState(false);
 
-  //TODO: Get the contact to load from the params and fetch.
-  //With useEffect, load the contact when params changes
-  //and update contact state
   const { id } = useParams();
-  console.log("id: ", id);
+  // console.log("id: ", id);
 
   useEffect(() => {
-    fetch(`${apiUrl}/${id}`)
+    fetch(`${apiUrl}/contacts/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setContact(data);
       });
   }, [id]);
 
-  console.log("contact: ", contact);
+  // console.log("contact: ", contact);
 
   if (!contact) {
     return <p>Loading</p>;
@@ -36,6 +33,7 @@ function ContactsView() {
       <p>{contact.email}</p>
       <p>{contact.linkedIn}</p>
       <p>{contact.twitter}</p>
+      <Link to={`/contacts/${id}/meetings`}>Meetings</Link>
     </div>
   );
 }
