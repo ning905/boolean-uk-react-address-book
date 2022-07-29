@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { apiUrl } from "../functions/apiFunctions";
-import { patchToApi, postToApi, sendToApi } from "../functions/apiFunctions";
 import { updateArr } from "../functions/arrayFunctions";
 
 function ContactsAdd(props) {
@@ -43,14 +42,34 @@ function ContactsAdd(props) {
     event.preventDefault();
 
     if (thisContact.id < contactId) {
-      patchToApi(`${apiUrl}/contacts`, thisContact);
-
-      setContacts(updateArr(contacts, thisContact));
+      fetch(`${apiUrl}/contacts/${thisContact.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...thisContact,
+        }),
+      }).then(() => {
+        setContacts(updateArr(contacts, thisContact));
+      });
     } else {
-      postToApi(`${apiUrl}/contacts`, thisContact);
-
-      setContacts([...contacts, thisContact]);
-      setContactId(contactId + 1);
+      fetch(`${apiUrl}/contacts`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...thisContact,
+        }),
+      })
+        // .then((res) => res.json())
+        .then(() => {
+          setContacts([...contacts, thisContact]);
+        })
+        .then(() => {
+          setContactId(contactId + 1);
+        });
     }
     navigate("/");
   }

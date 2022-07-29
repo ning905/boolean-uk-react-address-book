@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiUrl, postToApi } from "../functions/apiFunctions";
+import { apiUrl } from "../functions/apiFunctions";
 
 export default function MeetingsList() {
   const { id } = useParams();
@@ -30,11 +30,18 @@ export default function MeetingsList() {
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    postToApi(`${apiUrl}/meetings`, thisMeeting);
-
-    setMeetings([...meetings, thisMeeting]);
-    setThisMeeting(iniMeeting);
+    fetch(`${apiUrl}/meetings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...thisMeeting,
+      }),
+    }).then(() => {
+      setMeetings([...meetings, thisMeeting]);
+      setThisMeeting(iniMeeting);
+    });
   }
 
   return (

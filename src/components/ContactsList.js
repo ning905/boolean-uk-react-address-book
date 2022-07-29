@@ -1,52 +1,43 @@
-import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { apiUrl } from "../functions/apiFunctions";
-import { deleteFromApi } from "../functions/apiFunctions";
 import { filterArr } from "../functions/arrayFunctions";
 
 function ContactsList(props) {
   const { contacts, setContacts } = props;
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useState([]);
-  let filteredContacts = [...contacts];
   const selectedTypes = searchParams.getAll("type");
-  // const filteredContacts = contacts.filter((contact) =>
-  //   filters.includes(contact.type)
-  // );
-  const showWorkContacts = searchParams.getAll("type").includes("work");
-  console.log("showWorkContacts", showWorkContacts);
-  const showPersonalContacts = searchParams.getAll("type").includes("personal");
 
-  useEffect(() => {
-    setSearchParams({ type: filters });
-
-    if (showWorkContacts || showPersonalContacts) {
-      filteredContacts = contacts.filter((contact) =>
-        filters.includes(contact.type)
-      );
-    }
-    console.log("filteredContacts", filteredContacts);
-  }, [filters]);
+  let filteredContacts;
+  if (selectedTypes.length > 0) {
+    filteredContacts = contacts.filter((contact) =>
+      selectedTypes.includes(contact.type)
+    );
+  } else {
+    filteredContacts = [...contacts];
+  }
 
   function handleClick(itemToDelete) {
-    deleteFromApi(`${apiUrl}/contacts`, itemToDelete);
-
-    setContacts(filterArr(contacts, itemToDelete));
+    fetch(`${apiUrl}/contacts/${itemToDelete.id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        res.json();
+      })
+      .then(() => {
+        setContacts(filterArr(contacts, itemToDelete));
+      });
   }
 
   function handleChange(event) {
-    const { checked, name, value } = event.target;
-    // console.log("name: ", name);
-    // console.log("value: ", value);
+    const { checked, value } = event.target;
     if (checked) {
-      setFilters([...filters, value]);
+      setSearchParams({ type: [...selectedTypes, value] });
     } else {
-      const newFilters = filters.filter((filter) => filter !== value);
-      setFilters(newFilters);
+      const updated = selectedTypes.filter((type) => type !== value);
+      setSearchParams({ type: [...updated] });
     }
   }
 
-  console.log("filters: ", filters);
   console.log("selectedTypes: ", selectedTypes);
 
   return (
@@ -64,7 +55,7 @@ function ContactsList(props) {
             id="work"
             name="type"
             value="work"
-            // checked={filters.includes("work")}
+            checked={selectedTypes.includes("work")}
             onChange={handleChange}
           />
           <label htmlFor="work">👩🏻‍💻 Work</label>
@@ -76,7 +67,7 @@ function ContactsList(props) {
             id="personal"
             name="type"
             value="personal"
-            // checked={filters.includes("personal")}
+            checked={selectedTypes.includes("personal")}
             onChange={handleChange}
           />
           <label htmlFor="personal">👭🏻 Personal</label>
@@ -86,10 +77,6 @@ function ContactsList(props) {
       <ul className="contacts-list">
         {filteredContacts.map((contact, index) => {
           const { type, firstName, lastName } = contact;
-
-          {
-            /* console.log("this contact is: ", contact); */
-          }
 
           return (
             <li className="contact" key={index}>
